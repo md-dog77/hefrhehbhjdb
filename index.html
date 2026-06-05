@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Minecraft Skin Downloader</title>
+    <!-- Шрифт в стиле Minecraft -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* небольшая имитация игры, но текст можно выделять */
+        }
+
+        body {
+            font-family: 'Press Start 2P', monospace, 'Courier New', monospace;
+            background-color: #2d2a1e;
+            /* Фон с текстурой травы (пиксельный узор) */
+            background-image: repeating-linear-gradient(0deg, #3c5a2b 0px, #3c5a2b 2px, #4a6b35 2px, #4a6b35 4px);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        /* Карточка в стиле стола для крафта */
+        .crafting-table {
+            max-width: 700px;
+            width: 100%;
+            background-color: #c6c6c6;
+            border: 6px solid #2c2c2c;
+            box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.4), inset 0 0 0 2px #f0f0f0;
+            padding: 24px 20px 30px 20px;
+            transition: all 0.2s;
+            /* Пиксельные углы (дополнительный эффект) */
+            image-rendering: crisp-edges;
+        }
+
+        /* Заголовки */
+        h1 {
+            font-size: 1.5rem;
+            text-align: center;
+            color: #2c2c2c;
+            text-shadow: 3px 3px 0 #8b8b8b;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            word-break: break-word;
+        }
+
+        .sub {
+            font-size: 0.65rem;
+            text-align: center;
+            color: #3b2a1f;
+            margin-bottom: 28px;
+            border-bottom: 2px dotted #3b2a1f;
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            padding-bottom: 8px;
+        }
+
+        /* Переключатель версий (стилизованные радио-кнопки) */
+        .version-switch {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            margin-bottom: 24px;
+            background: #9e9e7a;
+            padding: 12px;
+            border: 2px solid #3b2a1f;
+            box-shadow: inset 0 0 0 2px #e0e0b0;
+        }
+
+        .version-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            color: #1f1a10;
+            text-shadow: none;
+        }
+
+        .version-option input {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background-color: #2d2a1e;
+            border: 2px solid #4a3a28;
+            cursor: pointer;
+            position: relative;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 0 0 1px #bba88a;
+        }
+
+        .version-option input:checked {
+            background-color: #6c8c4a;
+            box-shadow: inset 0 0 0 3px #2d2a1e, 0 0 0 1px #bba88a;
+        }
+
+        /* Поле ввода */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .minecraft-input {
+            width: 100%;
+            background: #f0f0e0;
+            border: 4px solid #3b2a1f;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.9rem;
+            padding: 14px 12px;
+            color: #1f1a10;
+            box-shadow: inset 2px 2px 0 #8b7a64, 4px 4px 0 rgba(0,0,0,0.2);
+            outline: none;
+            transition: 0.1s linear;
+            letter-spacing: 1px;
+        }
+
+        .minecraft-input:focus {
+            border-color: #5b3e1f;
+            background: #fffff0;
+        }
+
+        /* Кнопка в стиле Minecraft */
+        .minecraft-btn {
+            background: #6b6b4e;
+            border: none;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.8rem;
+            padding: 14px 18px;
+            color: #f0f0e0;
+            text-shadow: 2px 2px 0 #2c2c2c;
+            width: 100%;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #2c2c2c;
+            transition: 0.07s linear;
+            margin-bottom: 18px;
+            letter-spacing: 1px;
+        }
+
+        .minecraft-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #2c2c2c;
+        }
+
+        .minecraft-btn:disabled {
+            opacity: 0.6;
+            transform: translateY(0);
+            cursor: not-allowed;
+            box-shadow: 0 6px 0 #2c2c2c;
+        }
+
+        /* Зона превью */
+        .preview-container {
+            background: #2d2a1e;
+            border: 6px solid #3b2a1f;
+            padding: 18px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: inset 0 0 0 2px #8b7a64, 6px 6px 0 rgba(0,0,0,0.3);
+        }
+
+        .skin-frame {
+            display: inline-block;
+            border: 4px solid #3b2a1f;
+            background: #4a3a28;
+            padding: 6px;
+            image-rendering: crisp-edges;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+        }
+
+        .skin-img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            display: block;
+            background: #8b8b8b;
+        }
+
+        .skin-info {
+            margin-top: 14px;
+            font-size: 0.7rem;
+            color: #f5efcf;
+            background: #1f1a10;
+            display: inline-block;
+            padding: 8px 14px;
+            border: 2px solid #b89a6a;
+            font-family: monospace;
+            word-break: break-word;
+        }
+
+        /* Кнопка скачивания */
+        #downloadBtn {
+            background: #3c6e2f;
+            box-shadow: 0 6px 0 #1e3a1a;
+            margin-top: 6px;
+        }
+
+        /* Спиннер (пиксельный) */
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 4px solid #3b2a1f;
+            border-top: 4px solid #e5b83c;
+            border-right: 4px solid #e5b83c;
+            animation: spin 0.8s steps(4) infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            background: #2d2a1e;
+            color: #ffd966;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #b89a6a;
+        }
+
+        .error-message {
+            background: #3c1a1a;
+            color: #ffaa88;
+            font-size: 0.6rem;
+            padding: 12px;
+            text-align: center;
+            margin-top: 16px;
+            border-left: 8px solid #ff4444;
+            font-family: monospace;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* адаптивность */
+        @media (max-width: 600px) {
+            .crafting-table {
+                padding: 16px;
+            }
+            h1 {
+                font-size: 1.1rem;
+            }
+            .minecraft-input, .minecraft-btn {
+                font-size: 0.7rem;
+                padding: 12px;
+            }
+            .version-option {
+                font-size: 0.55rem;
+            }
+            .skin-img {
+                max-width: 240px;
+            }
+            .skin-info {
+                font-size: 0.55rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .version-switch {
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+        }
+
+        footer {
+            font-size: 0.5rem;
+            text-align: center;
+            margin-top: 20px;
+            color: #2c2c2c;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+<div class="crafting-table">
+    <h1>⛏️ Minecraft Skin Downloader ⛏️</h1>
+    <div style="text-align: center;">
+        <div class="sub">Скачай скин по нику — Java & Bedrock</div>
+    </div>
+
+    <!-- Переключатель версий -->
+    <div class="version-switch">
+        <label class="version-option">
+            <input type="radio" name="edition" value="java" checked> <span>JAVA EDITION</span>
+        </label>
+        <label class="version-option">
+            <input type="radio" name="edition" value="bedrock"> <span>BEDROCK EDITION</span>
+        </label>
+    </div>
+
+    <!-- Поле ввода ника -->
+    <div class="input-group">
+        <input type="text" id="nickInput" class="minecraft-input" placeholder="Введите ник игрока" autocomplete="off">
+    </div>
+
+    <!-- Кнопка поиска -->
+    <button id="searchButton" class="minecraft-btn">🔍 НАЙТИ СКИН</button>
+
+    <!-- Индикатор загрузки (скрыт по умолчанию) -->
+    <div id="loadingIndicator" class="loading-text hidden">
+        <div class="spinner"></div>
+        <span>ЗАГРУЗКА СКИНА...</span>
+    </div>
+
+    <!-- Область превью -->
+    <div id="previewArea" class="preview-container hidden">
+        <div class="skin-frame">
+            <img id="skinImage" class="skin-img" src="" alt="Превью скина">
+        </div>
+        <div id="skinInfo" class="skin-info">—</div>
+    </div>
+
+    <!-- Кнопка скачивания (изначально скрыта) -->
+    <button id="downloadBtn" class="minecraft-btn" style="display: none;">💾 СКАЧАТЬ СКИН (PNG)</button>
+
+    <!-- Блок ошибок -->
+    <div id="errorMsg" class="error-message hidden"></div>
+    <footer>© Craft table • Mojang / GeyserMC API</footer>
+</div>
+
+<script>
+    (function() {
+        // DOM элементы
+        const nickInput = document.getElementById('nickInput');
+        const searchBtn = document.getElementById('searchButton');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const previewArea = document.getElementById('previewArea');
+        const skinImage = document.getElementById('skinImage');
+        const skinInfo = document.getElementById('skinInfo');
+        const errorDiv = document.getElementById('errorMsg');
+        const loadingDiv = document.getElementById('loadingIndicator');
+        
+        // Состояния приложения
+        let currentSkinUrl = null;      // URL загруженного скина (PNG)
+        let currentUsername = null;      // ник (нормализованный)
+        let currentEdition = 'java';     // java / bedrock
+        let isLoading = false;            // блокировка повторных запросов
+
+        // Вспомогательные функции UI
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            // Скрываем превью если была ошибка
+            previewArea.classList.add('hidden');
+            downloadBtn.style.display = 'none';
+            currentSkinUrl = null;
+        }
+
+        function hideError() {
+            errorDiv.classList.add('hidden');
+            errorDiv.textContent = '';
+        }
+
+        function setLoading(loading) {
+            isLoading = loading;
+            if (loading) {
+                searchBtn.disabled = true;
+                loadingDiv.classList.remove('hidden');
+                hideError();
+                // скрываем старый превью и кнопку скачивания во время нового поиска
+                previewArea.classList.add('hidden');
+                downloadBtn.style.display = 'none';
+                currentSkinUrl = null;
+                // очищаем img, чтобы не висела старая картинка
+                skinImage.removeAttribute('src');
+                skinInfo.textContent = '—';
+            } else {
+                searchBtn.disabled = false;
+                loadingDiv.classList.add('hidden');
+            }
+        }
+
+        // Отобразить успешно загруженный скин
+        function displaySkin(imageUrl, username, editionLabel) {
+            currentSkinUrl = imageUrl;
+            currentUsername = username;
+            currentEdition = (document.querySelector('input[name="edition"]:checked').value === 'java') ? 'Java' : 'Bedrock';
+            
+            // Устанавливаем изображение и обрабатываем возможную ошибку загрузки
+            skinImage.onload = () => {
+                // всё хорошо
+                skinInfo.textContent = `👤 ${username}  |  🧩 ${editionLabel}`;
+                previewArea.classList.remove('hidden');
+                downloadBtn.style.display = 'block';
+                hideError();
+            };
+            skinImage.onerror = () => {
+                // если картинка не загрузилась (редко, но бывает)
+                showError('Не удалось загрузить изображение скина. Возможно, проблема с сетью или сервером.');
+                previewArea.classList.add('hidden');
+                downloadBtn.style.display = 'none';
+                currentSkinUrl = null;
+            };
+            skinImage.src = imageUrl;
+        }
+
+        // Скачивание скина через blob
+        async function downloadSkin() {
+            if (!currentSkinUrl) {
+                showError('Нет загруженного скина для скачивания.');
+                return;
+            }
+            if (!currentUsername) return;
+            
+            // Определяем версию из текущего состояния (либо из radio, но сохраняем currentEdition из последнего успеха)
+            let editionType = (document.querySelector('input[name="edition"]:checked').value === 'java') ? 'Java' : 'Bedrock';
+            // Имя файла: ник_версия.png
+            const fileName = `${currentUsername}_${editionType}.png`;
+            
+            try {
+                // Показываем индикатор загрузки на кнопке, но без блокировки интерфейса
+                const originalText = downloadBtn.textContent;
+                downloadBtn.textContent = '⏳ ЗАГРУЗКА...';
+                downloadBtn.disabled = true;
+                
+                const response = await fetch(currentSkinUrl, { mode: 'cors' });
+                if (!response.ok) throw new Error('Ошибка сети при скачивании');
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(blobUrl);
+                
+                // Восстанавливаем кнопку
+                downloadBtn.textContent = originalText;
+                downloadBtn.disabled = false;
+            } catch (err) {
+                console.warn('Download error:', err);
+                showError('Не удалось скачать скин. Проверьте соединение или попробуйте позже.');
+                downloadBtn.textContent = '💾 СКАЧАТЬ СКИН (PNG)';
+                downloadBtn.disabled = false;
+            }
+        }
+
+        // ********** Java Edition: получить UUID через Mojang, затем Crafatar URL **********
+        async function fetchJavaSkin(username) {
+            // 1) Получаем UUID
+            const mojangUrl = `https://api.mojang.com/users/profiles/minecraft/${username}`;
+            const mojangRes = await fetch(mojangUrl);
+            
+            if (!mojangRes.ok) {
+                if (mojangRes.status === 404) {
+                    throw new Error('Игрок не найден в Java Edition');
+                } else {
+                    throw new Error(`Ошибка Mojang API (${mojangRes.status})`);
+                }
+            }
+            
+            const mojangData = await mojangRes.json();
+            if (!mojangData || !mojangData.id) {
+                throw new Error('Не удалось получить UUID игрока');
+            }
+            
+            const uuid = mojangData.id; // без дефисов, например '069a79f444e94726a5befca90e38aaf5'
+            // Crafatar ссылка (прямой PNG)
+            const skinUrl = `https://crafatar.com/skins/${uuid}`;
+            return skinUrl;
+        }
+
+        // ********** Bedrock Edition: GeyserMC API **********
+        async function fetchBedrockSkin(username) {
+            const geyserUrl = `https://api.geysermc.org/v2/skin/${encodeURIComponent(username)}`;
+            const response = await fetch(geyserUrl);
+            
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Скин не найден для Bedrock Edition');
+                } else {
+                    throw new Error(`GeyserMC API ошибка (${response.status})`);
+                }
+            }
+            
+            const data = await response.json();
+            if (!data || !data.skin_url) {
+                throw new Error('Скин не найден для Bedrock Edition (отсутствует skin_url)');
+            }
+            return data.skin_url;
+        }
+
+        // Основная функция поиска и загрузки скина
+        async function searchSkin() {
+            // Защита от повторных кликов во время загрузки
+            if (isLoading) return;
+            
+            // Получаем ник, обрезаем пробелы, переводим в нижний регистр (ник регистронезависим)
+            let rawNick = nickInput.value.trim();
+            if (rawNick === "") {
+                showError('Пожалуйста, введите ник игрока!');
+                nickInput.style.borderColor = "#aa3e2e";
+                setTimeout(() => { nickInput.style.borderColor = "#3b2a1f"; }, 1000);
+                return;
+            }
+            nickInput.style.borderColor = "#3b2a1f";
+            const normalizedNick = rawNick.toLowerCase(); // для запросов в API регистр не критичен
+            // Определяем выбранную версию
+            const editionRadio = document.querySelector('input[name="edition"]:checked');
+            const edition = editionRadio.value; // "java" или "bedrock"
+            
+            // UI: показать загрузку, сброс ошибок, спрятать кнопку скачивания
+            setLoading(true);
+            currentSkinUrl = null;
+            
+            try {
+                let skinImageUrl = null;
+                let editionDisplay = (edition === 'java') ? 'Java Edition' : 'Bedrock Edition';
+                
+                if (edition === 'java') {
+                    skinImageUrl = await fetchJavaSkin(normalizedNick);
+                } else { // bedrock
+                    skinImageUrl = await fetchBedrockSkin(normalizedNick);
+                }
+                
+                // Проверка, что URL валидный
+                if (!skinImageUrl || !skinImageUrl.startsWith('http')) {
+                    throw new Error('Получен некорректный URL скина');
+                }
+                
+                // Отображаем скин (используем оригинальный введенный ник для красоты, но можно normalizedNick)
+                const displayNick = rawNick; // сохраняем как ввёл пользователь (обрезанный)
+                displaySkin(skinImageUrl, displayNick, editionDisplay);
+                
+            } catch (err) {
+                console.error('Search error:', err);
+                let errorMsg = err.message || 'Не удалось загрузить скин. Проверьте ник или попробуйте позже.';
+                // Дополнительные уточнения для пользователя
+                if (errorMsg.includes('Failed to fetch') || errorMsg.includes('NetworkError')) {
+                    errorMsg = 'Ошибка сети. Проверьте интернет-соединение.';
+                }
+                showError(errorMsg);
+                // Гарантированно скрываем превью и кнопку
+                previewArea.classList.add('hidden');
+                downloadBtn.style.display = 'none';
+                currentSkinUrl = null;
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        // Обработчик изменения версии: если пользователь переключает версию, сбрасываем текущий скин, чтобы не было путаницы
+        function resetOnVersionChange() {
+            if (isLoading) return;
+            // Если переключили версию – прячем ранее загруженный скин и ошибки
+            previewArea.classList.add('hidden');
+            downloadBtn.style.display = 'none';
+            currentSkinUrl = null;
+            hideError();
+            skinImage.removeAttribute('src');
+            skinInfo.textContent = '—';
+        }
+        
+        // Инициализация слушателей
+        function init() {
+            searchBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                searchSkin();
+            });
+            
+            // Кнопка скачивания
+            downloadBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentSkinUrl && !isLoading) {
+                    downloadSkin();
+                } else {
+                    showError('Сначала найдите скин, чтобы скачать его.');
+                }
+            });
+            
+            // Переключение радио-кнопок - сброс текущего результата
+            const javaRadio = document.querySelector('input[value="java"]');
+            const bedrockRadio = document.querySelector('input[value="bedrock"]');
+            javaRadio.addEventListener('change', resetOnVersionChange);
+            bedrockRadio.addEventListener('change', resetOnVersionChange);
+            
+            // Поддержка Enter в поле ввода
+            nickInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    searchSkin();
+                }
+            });
+            
+            // Дополнительно: очистка ошибок при начале ввода
+            nickInput.addEventListener('focus', () => {
+                hideError();
+            });
+        }
+        
+        init();
+    })();
+</script>
+</body>
+</html>
