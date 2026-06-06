@@ -4,351 +4,1112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minecraft Skin Downloader</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    
-    <script 
-        src="https://cdn.jsdelivr.net/npm/skinview3d@2.1.2/dist/skinview3d.bundle.js"
-        onerror="this.onerror=null; this.src='https://unpkg.com/skinview3d@2.1.2/dist/skinview3d.bundle.js'; console.log('Основной CDN заблокирован. Загружен резервный зеркальный скрипт.');">
-    </script>
-
     <style>
-        * {
-            box-sizing: border-box;
-            image-rendering: pixelated;
+        :root {
+            --grass-top: #7ec850;
+            --grass-mid: #6ab040;
+            --grass-dark: #5a9a35;
+            --dirt: #8b5e3c;
+            --dirt-dark: #6b4226;
+            --stone: #888888;
+            --stone-light: #aaaaaa;
+            --stone-dark: #555555;
+            --wood: #bc9862;
+            --wood-dark: #8b6b4a;
+            --wood-light: #d4b88c;
+            --error-red: #ff5555;
+            --error-bg: #550000;
+            --text-light: #ffffff;
+            --text-dark: #2d1f0e;
+            --pixel-size: 4px;
         }
-        
-        body {
+
+        * {
             margin: 0;
-            padding: 20px;
-            font-family: 'Press Start 2P', monospace;
-            color: #FFFFFF;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Press Start 2P', 'Courier New', monospace;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            background-color: #4c3a26;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%235c442c'/%3E%3Crect width='4' height='4' fill='%234c3a26' x='0' y='0'/%3E%3Crect width='4' height='4' fill='%234c3a26' x='8' y='4'/%3E%3Crect width='4' height='4' fill='%234c3a26' x='4' y='12'/%3E%3Crect width='4' height='4' fill='%233c2e1e' x='12' y='8'/%3E%3Crect width='4' height='4' fill='%236c5034' x='4' y='0'/%3E%3Crect width='4' height='4' fill='%236c5034' x='12' y='12'/%3E%3C/svg%3E");
-            background-size: 64px 64px;
-            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.6);
-        }
-
-        .gui-container {
-            background: rgba(16, 16, 16, 0.85);
-            border: 4px solid #000000;
-            outline: 4px solid #3c3c3c;
-            padding: 30px;
-            width: 100%;
-            max-width: 500px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-            position: relative;
-        }
-
-        h1 {
-            font-size: 18px;
-            margin-top: 0;
-            margin-bottom: 25px;
-            color: #FFFF55;
-            text-shadow: 3px 3px 0px #3f3f00;
-            line-height: 1.4;
-        }
-
-        .mc-input-wrapper {
-            margin-bottom: 20px;
-        }
-
-        .mc-input {
-            width: 100%;
-            background-color: #000000;
-            border: 4px solid #a0a0a0;
-            color: #e0e0e0;
-            padding: 12px;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 14px;
-            outline: none;
-            text-align: center;
-        }
-
-        .mc-input:focus {
-            border-color: #ffffff;
-            color: #ffffff;
-        }
-
-        .mc-button {
-            width: 100%;
-            background: #5c5c5c;
-            border: 4px solid #000000;
-            border-top-color: #aeaeae;
-            border-left-color: #aeaeae;
-            border-bottom-color: #373737;
-            border-right-color: #373737;
-            color: #e0e0e0;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 14px;
-            padding: 14px;
-            cursor: pointer;
-            text-shadow: 2px 2px 0px #2a2a2a;
-            user-select: none;
-            margin-bottom: 15px;
-            transition: background 0.1s;
-        }
-
-        .mc-button:hover {
-            background: #7c7c7c;
-            color: #ffffa0;
-            border-top-color: #cecece;
-            border-left-color: #cecece;
-            border-bottom-color: #474747;
-            border-right-color: #474747;
-        }
-
-        .mc-button:active {
-            border-top-color: #373737;
-            border-left-color: #373737;
-            border-bottom-color: #aeaeae;
-            border-right-color: #aeaeae;
-            padding-top: 15px;
-            padding-bottom: 13px;
-        }
-
-        .mc-button:disabled {
-            background: #3c3c3c;
-            color: #7a7a7a;
-            border-color: #5a5a5a;
-            text-shadow: none;
-            cursor: not-allowed;
-        }
-
-        .preview-container {
-            margin: 20px auto;
-            background: #141414;
-            border: 4px solid #373737;
-            width: 100%;
-            height: 320px;
-            display: none;
             justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
+            background-color: #6b4226;
+            background-image:
+                linear-gradient(180deg,
+                    #7ec850 0%,
+                    #7ec850 35%,
+                    #6ab040 35%,
+                    #6ab040 38%,
+                    #5a9a35 38%,
+                    #5a9a35 42%,
+                    #7ec850 42%,
+                    #7ec850 45%,
+                    #6ab040 45%,
+                    #6ab040 48%,
+                    #8b5e3c 48%,
+                    #8b5e3c 52%,
+                    #7a5232 52%,
+                    #7a5232 55%,
+                    #8b5e3c 55%,
+                    #8b5e3c 58%,
+                    #6b4226 58%,
+                    #6b4226 62%,
+                    #8b5e3c 62%,
+                    #8b5e3c 66%,
+                    #7a5232 66%,
+                    #7a5232 70%,
+                    #6b4226 70%,
+                    #6b4226 100%);
+        background-repeat: repeat;
+        background-size: 100% 64px;
+        image-rendering: pixelated;
+        padding: 20px;
+        position: relative;
+        overflow-x: hidden;
+    }
 
-        #skin-viewer {
-            width: 100%;
-            height: 100%;
-            cursor: grab;
-        }
+    /* Декоративные облака */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 5%;
+        left: 5%;
+        width: 120px;
+        height: 40px;
+        background: #ffffff;
+        border: 3px solid #cccccc;
+        box-shadow:
+            20px -10px 0 0 #ffffff,
+            20px -10px 0 3px #cccccc,
+            50px -5px 0 0 #ffffff,
+            50px -5px 0 3px #cccccc,
+            80px 0px 0 0 #ffffff,
+            80px 0px 0 3px #cccccc;
+        opacity: 0.8;
+        z-index: 0;
+        pointer-events: none;
+        animation: clouds-drift 30s linear infinite;
+    }
+    body::after {
+        content: '';
+        position: fixed;
+        top: 12%;
+        right: 8%;
+        width: 90px;
+        height: 30px;
+        background: #ffffff;
+        border: 3px solid #cccccc;
+        box-shadow:
+            15px -8px 0 0 #ffffff,
+            15px -8px 0 3px #cccccc,
+            40px -3px 0 0 #ffffff,
+            40px -3px 0 3px #cccccc;
+        opacity: 0.7;
+        z-index: 0;
+        pointer-events: none;
+        animation: clouds-drift 25s linear infinite reverse;
+    }
 
-        #skin-viewer:active {
-            cursor: grabbing;
+    @keyframes clouds-drift {
+        0% {
+            transform: translateX(0);
         }
+        100% {
+            transform: translateX(80px);
+        }
+    }
 
-        .status-msg {
-            margin: 15px 0;
+    .main-container {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 620px;
+        background: linear-gradient(180deg, #c8b89a 0%, #b8a480 5%, #c8b89a 10%, #d4c4a8 50%, #b8a480 95%, #a89470 100%);
+        border: 6px solid #5c4a30;
+        border-radius: 0;
+        padding: 30px 24px 24px;
+        box-shadow:
+            inset 3px 3px 0 rgba(255, 255, 255, 0.25),
+            inset -3px -3px 0 rgba(0, 0, 0, 0.3),
+            8px 8px 0 rgba(0, 0, 0, 0.5),
+            12px 12px 0 rgba(0, 0, 0, 0.25);
+        text-align: center;
+        image-rendering: auto;
+    }
+
+    .title {
+        font-size: clamp(14px, 2.5vw, 20px);
+        color: #2d1f0e;
+        text-shadow: 2px 2px 0 #e0d5c0, -1px -1px 0 rgba(0, 0, 0, 0.3);
+        margin-bottom: 8px;
+        letter-spacing: 1px;
+        word-break: break-word;
+        line-height: 1.4;
+    }
+    .title .icon {
+        display: inline-block;
+        font-size: 1.3em;
+        vertical-align: middle;
+        margin: 0 4px;
+    }
+
+    .subtitle {
+        font-size: 8px;
+        color: #5c4a30;
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        opacity: 0.8;
+    }
+
+    .search-form {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        align-items: stretch;
+        margin-bottom: 16px;
+    }
+
+    .input-wrapper {
+        flex: 1 1 250px;
+        min-width: 200px;
+        position: relative;
+    }
+
+    .nickname-input {
+        width: 100%;
+        padding: 14px 16px;
+        font-family: 'Press Start 2P', 'Courier New', monospace;
+        font-size: clamp(10px, 1.6vw, 13px);
+        background: #3c3c3c;
+        color: #ffffff;
+        border: 4px solid #1a1a1a;
+        border-radius: 0;
+        outline: none;
+        letter-spacing: 1px;
+        box-shadow:
+            inset 3px 3px 0 rgba(0, 0, 0, 0.6),
+            inset -2px -2px 0 rgba(255, 255, 255, 0.05);
+        transition: border-color 0.2s, box-shadow 0.2s;
+        image-rendering: pixelated;
+    }
+    .nickname-input:focus {
+        border-color: #7ec850;
+        box-shadow:
+            inset 3px 3px 0 rgba(0, 0, 0, 0.6),
+            inset -2px -2px 0 rgba(255, 255, 255, 0.05),
+            0 0 12px rgba(126, 200, 80, 0.4);
+    }
+    .nickname-input::placeholder {
+        color: #777777;
+        font-size: 9px;
+        letter-spacing: 1px;
+    }
+
+    .search-btn {
+        padding: 14px 22px;
+        font-family: 'Press Start 2P', 'Courier New', monospace;
+        font-size: clamp(9px, 1.4vw, 12px);
+        background: linear-gradient(180deg, #aaaaaa 0%, #888888 30%, #777777 50%, #666666 70%, #555555 100%);
+        color: #ffffff;
+        border: 4px solid #3a3a3a;
+        border-top-color: #cccccc;
+        border-left-color: #999999;
+        border-right-color: #555555;
+        border-bottom-color: #333333;
+        cursor: pointer;
+        letter-spacing: 1px;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+        box-shadow: 0 4px 0 #333333, 0 6px 8px rgba(0, 0, 0, 0.4);
+        transition: all 0.1s ease;
+        white-space: nowrap;
+        image-rendering: pixelated;
+        position: relative;
+        top: 0;
+    }
+    .search-btn:hover {
+        background: linear-gradient(180deg, #bbbbbb 0%, #999999 30%, #888888 50%, #777777 70%, #666666 100%);
+        border-top-color: #dddddd;
+        border-left-color: #aaaaaa;
+        box-shadow: 0 4px 0 #333333, 0 6px 12px rgba(0, 0, 0, 0.5);
+    }
+    .search-btn:active {
+        top: 4px;
+        box-shadow: 0 1px 0 #333333, 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    .search-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        top: 0;
+        box-shadow: 0 4px 0 #333333, 0 6px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Область сообщений */
+    .message-area {
+        min-height: 30px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .message {
+        font-size: 10px;
+        padding: 10px 16px;
+        border-radius: 0;
+        letter-spacing: 1px;
+        line-height: 1.5;
+        display: none;
+        text-align: center;
+        image-rendering: pixelated;
+    }
+    .message.loading {
+        display: inline-block;
+        background: #3c3c3c;
+        color: #ffdd55;
+        border: 3px solid #5a5a5a;
+        animation: pulse-text 1.2s ease-in-out infinite;
+    }
+    .message.error {
+        display: inline-block;
+        background: #550000;
+        color: #ff5555;
+        border: 3px solid #880000;
+        box-shadow: 0 0 8px rgba(255, 50, 50, 0.3);
+    }
+    .message.success {
+        display: inline-block;
+        background: #1a3a1a;
+        color: #55ff55;
+        border: 3px solid #2a5a2a;
+    }
+
+    @keyframes pulse-text {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    /* 3D контейнер */
+    .skin-viewer-container {
+        display: none;
+        width: 100%;
+        max-width: 400px;
+        aspect-ratio: 1 / 1;
+        margin: 0 auto 16px;
+        background: linear-gradient(180deg, #87ceeb 0%, #b0e0f0 40%, #c8e8f8 60%, #d0eaf5 100%);
+        border: 5px solid #4a3828;
+        box-shadow:
+            inset 2px 2px 0 rgba(255, 255, 255, 0.3),
+            inset -2px -2px 0 rgba(0, 0, 0, 0.3),
+            4px 4px 0 rgba(0, 0, 0, 0.4);
+        cursor: grab;
+        position: relative;
+        overflow: hidden;
+        image-rendering: auto;
+    }
+    .skin-viewer-container:active {
+        cursor: grabbing;
+    }
+    .skin-viewer-container canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    /* Кнопка скачивания */
+    .download-btn {
+        display: none;
+        margin: 0 auto 12px;
+        padding: 14px 28px;
+        font-family: 'Press Start 2P', 'Courier New', monospace;
+        font-size: clamp(9px, 1.3vw, 11px);
+        background: linear-gradient(180deg, #7ec850 0%, #5a9a35 40%, #4a8a2a 70%, #3a7020 100%);
+        color: #ffffff;
+        border: 4px solid #2a5018;
+        border-top-color: #a0e870;
+        border-left-color: #6ab040;
+        border-right-color: #3a7020;
+        border-bottom-color: #1a3a10;
+        cursor: pointer;
+        letter-spacing: 1px;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+        box-shadow: 0 4px 0 #2a5018, 0 6px 10px rgba(0, 0, 0, 0.4);
+        transition: all 0.1s ease;
+        position: relative;
+        top: 0;
+        white-space: nowrap;
+    }
+    .download-btn:hover {
+        background: linear-gradient(180deg, #90e060 0%, #6ab040 40%, #5a9a35 70%, #4a8a2a 100%);
+        border-top-color: #b8f888;
+        box-shadow: 0 4px 0 #2a5018, 0 6px 14px rgba(0, 0, 0, 0.5);
+    }
+    .download-btn:active {
+        top: 4px;
+        box-shadow: 0 1px 0 #2a5018, 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Адаптивность */
+    @media (max-width: 600px) {
+        .main-container {
+            padding: 20px 14px 16px;
+            border-width: 4px;
+            box-shadow: inset 2px 2px 0 rgba(255, 255, 255, 0.2), inset -2px -2px 0 rgba(0, 0, 0, 0.3), 5px 5px 0 rgba(0, 0, 0, 0.5);
+        }
+        .search-form {
+            flex-direction: column;
+            gap: 8px;
+        }
+        .input-wrapper {
+            flex: 1 1 auto;
+            min-width: 100%;
+        }
+        .nickname-input {
             font-size: 11px;
-            line-height: 1.6;
+            padding: 12px 14px;
+        }
+        .search-btn {
+            width: 100%;
+            font-size: 11px;
+            padding: 12px;
+        }
+        .skin-viewer-container {
+            max-width: 280px;
+        }
+        .download-btn {
+            font-size: 10px;
+            padding: 12px 20px;
+        }
+        .title {
+            font-size: 14px;
+        }
+        body::before,
+        body::after {
             display: none;
         }
+    }
 
-        .error {
-            color: #FF5555;
-            text-shadow: 2px 2px 0px #3f0000;
+    @media (min-width: 601px) and (max-width: 900px) {
+        .main-container {
+            max-width: 550px;
+            padding: 25px 20px 20px;
         }
+        .skin-viewer-container {
+            max-width: 340px;
+        }
+        .nickname-input {
+            font-size: 11px;
+        }
+        .search-btn {
+            font-size: 10px;
+        }
+    }
 
-        .loading {
-            color: #55FF55;
-            text-shadow: 2px 2px 0px #003f00;
-            animation: pulse 1s infinite alternate;
+    @media (min-width: 901px) {
+        .skin-viewer-container {
+            max-width: 420px;
         }
-
-        @keyframes pulse {
-            from { opacity: 0.6; }
-            to { opacity: 1; }
-        }
-
-        .btn-download {
-            background: #55aa55;
-            border-top-color: #77cc77;
-            border-left-color: #77cc77;
-            border-bottom-color: #337733;
-            border-right-color: #337733;
-            display: none;
-        }
-
-        .btn-download:hover {
-            background: #66bb66;
-            color: #ffffff;
-            border-top-color: #88dd88;
-            border-left-color: #88dd88;
-            border-bottom-color: #448844;
-            border-right-color: #448844;
-        }
-
-        @media (max-width: 480px) {
-            body { padding: 10px; }
-            .gui-container { padding: 20px 15px; }
-            h1 { font-size: 15px; }
-            .mc-button, .mc-input { font-size: 12px; padding: 10px; }
-            .preview-container { height: 260px; }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
 
-    <div class="gui-container">
-        <h1>СКАЧАТЬ СКИН<br>ПО НИКНЕЙМУ</h1>
-        
-        <div class="mc-input-wrapper">
-            <input type="text" id="username-input" class="mc-input" placeholder="Введите никнейм..." autocomplete="off" spellcheck="false">
+    <div class="main-container">
+        <h1 class="title">
+            <span class="icon">⛏️</span> Minecraft Skin Downloader <span class="icon">⛏️</span>
+        </h1>
+        <p class="subtitle">Java Edition &bull; Введите никнейм игрока</p>
+
+        <form class="search-form" id="searchForm" autocomplete="off">
+            <div class="input-wrapper">
+                <input
+                type="text"
+                class="nickname-input"
+                id="nicknameInput"
+                placeholder="Введите никнейм"
+                maxlength="16"
+                spellcheck="false"
+                required
+                >
+            </div>
+            <button type="submit" class="search-btn" id="searchBtn">🔍 Найти скин</button>
+        </form>
+
+        <div class="message-area" id="messageArea">
+            <span class="message" id="messageText"></span>
         </div>
 
-        <button id="search-btn" class="mc-button">НАЙТИ СКИН</button>
-
-        <div id="loading-msg" class="status-msg loading">ИЩЕМ ИГРОКА В БАЗЕ ДАННЫХ...</div>
-        <div id="error-msg" class="status-msg error"></div>
-
-        <div id="preview-box" class="preview-container">
-            <canvas id="skin-viewer"></canvas>
+        <div class="skin-viewer-container" id="skinViewerContainer">
+            <!-- Three.js canvas вставится сюда -->
         </div>
 
-        <button id="download-btn" class="mc-button btn-download">СКАЧАТЬ PNG</button>
+        <button class="download-btn" id="downloadBtn" title="Скачать скин в формате PNG">
+            💾 Скачать скин (PNG)
+        </button>
     </div>
 
-    <script>
-        const usernameInput = document.getElementById('username-input');
-        const searchBtn = document.getElementById('search-btn');
-        const loadingMsg = document.getElementById('loading-msg');
-        const errorMsg = document.getElementById('error-msg');
-        const previewBox = document.getElementById('preview-box');
-        const downloadBtn = document.getElementById('download-btn');
-        
-        let skinViewer = null;
-        let activeSkinUrl = '';
-
-        function initSkinViewer(skinUrl) {
-            // Защитная проверка: если скрипт библиотеки заблокирован провайдером/блокировщиком
-            if (typeof skinview3d === 'undefined') {
-                showError('БИБЛИОТЕКА 3D БЛОКИРУЕТСЯ ВАШИМ БРАУЗЕРОМ!\nОТКЛЮЧИТЕ AD-BLOCK ИЛИ VPN.');
-                return false;
+    <!-- Import Map для Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
             }
+        }
+    </script>
 
-            try {
-                if (!skinViewer) {
-                    skinViewer = new skinview3d.SkinViewer({
-                        canvas: document.getElementById('skin-viewer'),
-                        width: previewBox.clientWidth,
-                        height: previewBox.clientHeight
-                    });
-                    skinViewer.autoRotate = true;
-                    skinViewer.autoRotateSpeed = 0.6;
-                    
-                    const controls = skinview3d.createOrbitControls(skinViewer);
-                    controls.enableZoom = false; 
-                }
-                skinViewer.loadSkin(skinUrl);
-                return true;
-            } catch (e) {
-                console.error("Ошибка инициализации плеера скинов:", e);
-                showError('ОШИБКА ОТОБРАЖЕНИЯ 3D МОДЕЛИ!');
-                return false;
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // ============ DOM-элементы ============
+        const searchForm = document.getElementById('searchForm');
+        const nicknameInput = document.getElementById('nicknameInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const messageText = document.getElementById('messageText');
+        const skinViewerContainer = document.getElementById('skinViewerContainer');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        // ============ Переменные состояния ============
+        let currentSkinUrl = null;
+        let currentNickname = null;
+        let scene = null;
+        let camera = null;
+        let renderer = null;
+        let controls = null;
+        let playerModel = null;
+        let animationId = null;
+        let isViewerInitialized = false;
+
+        // ============ Инициализация Three.js ============
+        function initThreeJS() {
+            if (isViewerInitialized) return;
+
+            const container = skinViewerContainer;
+            const width = container.clientWidth || 400;
+            const height = container.clientHeight || 400;
+
+            // Сцена
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87ceeb);
+            scene.fog = new THREE.Fog(0x87ceeb, 40, 120);
+
+            // Камера
+            camera = new THREE.PerspectiveCamera(45, width / height, 1, 200);
+            camera.position.set(28, 22, 40);
+            camera.lookAt(0, 14, 0);
+
+            // Рендерер
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.outputColorSpace = THREE.SRGBColorSpace;
+            container.appendChild(renderer.domElement);
+
+            // OrbitControls
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.target.set(0, 14, 0);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.08;
+            controls.minDistance = 20;
+            controls.maxDistance = 80;
+            controls.maxPolarAngle = Math.PI * 0.7;
+            controls.minPolarAngle = 0.2;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 1.5;
+            controls.update();
+
+            // Освещение
+            const ambientLight = new THREE.AmbientLight(0x8899bb, 1.6);
+            scene.add(ambientLight);
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 2.5);
+            sunLight.position.set(30, 40, 20);
+            sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 512;
+            sunLight.shadow.mapSize.height = 512;
+            sunLight.shadow.camera.near = 0.5;
+            sunLight.shadow.camera.far = 150;
+            sunLight.shadow.camera.left = -40;
+            sunLight.shadow.camera.right = 40;
+            sunLight.shadow.camera.top = 40;
+            sunLight.shadow.camera.bottom = -10;
+            sunLight.shadow.bias = -0.0005;
+            scene.add(sunLight);
+
+            const fillLight = new THREE.DirectionalLight(0xaaccff, 0.8);
+            fillLight.position.set(-15, 10, -10);
+            scene.add(fillLight);
+
+            // Полупрозрачная "земля" под персонажем
+            const groundGeo = new THREE.PlaneGeometry(60, 60);
+            const groundMat = new THREE.MeshStandardMaterial({
+                color: 0x8b5e3c,
+                roughness: 0.9,
+                metalness: 0,
+                transparent: true,
+                opacity: 0.6,
+            });
+            const ground = new THREE.Mesh(groundGeo, groundMat);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -6;
+            ground.receiveShadow = true;
+            ground.name = 'ground';
+            scene.add(ground);
+
+            isViewerInitialized = true;
+        }
+
+        // ============ Удаление старой модели ============
+        function removePlayerModel() {
+            if (playerModel && scene) {
+                scene.remove(playerModel);
+                disposeModelRecursively(playerModel);
+                playerModel = null;
             }
         }
 
-        window.addEventListener('resize', () => {
-            if (skinViewer && previewBox.style.display === 'flex') {
-                skinViewer.width = previewBox.clientWidth;
-                skinViewer.height = previewBox.clientHeight;
-            }
-        });
+        function disposeModelRecursively(obj) {
+            obj.traverse((child) => {
+                if (child.geometry) {
+                    child.geometry.dispose();
+                }
+                if (child.material) {
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach((m) => disposeMaterial(m));
+                    } else {
+                        disposeMaterial(child.material);
+                    }
+                }
+            });
+        }
 
-        async function searchSkin() {
-            const username = usernameInput.value.trim();
-            
-            if (!username) {
-                showError('ВВЕДИТЕ НИКНЕЙМ!');
+        function disposeMaterial(material) {
+            if (material.map) material.map.dispose();
+            if (material.normalMap) material.normalMap.dispose();
+            if (material.specularMap) material.specularMap.dispose();
+            if (material.bumpMap) material.bumpMap.dispose();
+            if (material.roughnessMap) material.roughnessMap.dispose();
+            if (material.metalnessMap) material.metalnessMap.dispose();
+            material.dispose();
+        }
+
+        // ============ UV-модификация BoxGeometry ============
+        /**
+         * Устанавливает UV-координаты для одной грани BoxGeometry.
+         * @param {THREE.BoxGeometry} geometry - геометрия куба
+         * @param {number} faceStartIndex - начальный индекс вершины грани (0,4,8,12,16,20)
+         * @param {number} u1 - левая U-координата (нормализованная)
+         * @param {number} v1 - нижняя V-координата (нормализованная, 0 снизу текстуры)
+         * @param {number} u2 - правая U-координата
+         * @param {number} v2 - верхняя V-координата
+         */
+        function setFaceUVs(geometry, faceStartIndex, u1, v1, u2, v2) {
+            const uv = geometry.attributes.uv;
+            uv.setXY(faceStartIndex, u1, v1); // нижний-левый
+            uv.setXY(faceStartIndex + 1, u2, v1); // нижний-правый
+            uv.setXY(faceStartIndex + 2, u1, v2); // верхний-левый
+            uv.setXY(faceStartIndex + 3, u2, v2); // верхний-правый
+        }
+
+        /**
+         * Конвертирует пиксельные координаты текстуры скина в нормализованные UV.
+         * В Three.js V=0 — низ текстуры, V=1 — верх.
+         * @param {number} x1 - левый край в пикселях
+         * @param {number} y1 - верхний край в пикселях (меньшее значение Y на изображении)
+         * @param {number} x2 - правый край в пикселях
+         * @param {number} y2 - нижний край в пикселях (большее значение Y на изображении)
+         * @param {number} texW - ширина текстуры
+         * @param {number} texH - высота текстуры
+         * @returns {{u1: number, v1: number, u2: number, v2: number}}
+         */
+        function pixelToUV(x1, y1, x2, y2, texW, texH) {
+            return {
+                u1: x1 / texW,
+                v1: 1.0 - y2 / texH, // низ текстурного фрагмента
+                u2: x2 / texW,
+                v2: 1.0 - y1 / texH, // верх текстурного фрагмента
+            };
+        }
+
+        // ============ UV-данные для частей тела (формат 64x64) ============
+        const UV_DATA_64x64 = {
+            head: {
+                front: { x1: 8, y1: 8, x2: 16, y2: 16 },
+                back: { x1: 24, y1: 8, x2: 32, y2: 16 },
+                top: { x1: 8, y1: 0, x2: 16, y2: 8 },
+                bottom: { x1: 16, y1: 0, x2: 24, y2: 8 },
+                right: { x1: 0, y1: 8, x2: 8, y2: 16 },
+                left: { x1: 16, y1: 8, x2: 24, y2: 16 },
+            },
+            body: {
+                front: { x1: 20, y1: 20, x2: 28, y2: 32 },
+                back: { x1: 32, y1: 20, x2: 40, y2: 32 },
+                top: { x1: 20, y1: 16, x2: 28, y2: 20 },
+                bottom: { x1: 28, y1: 16, x2: 36, y2: 20 },
+                right: { x1: 16, y1: 20, x2: 20, y2: 32 },
+                left: { x1: 28, y1: 20, x2: 32, y2: 32 },
+            },
+            rightArm: {
+                front: { x1: 44, y1: 20, x2: 48, y2: 32 },
+                back: { x1: 52, y1: 20, x2: 56, y2: 32 },
+                top: { x1: 44, y1: 16, x2: 48, y2: 20 },
+                bottom: { x1: 48, y1: 16, x2: 52, y2: 20 },
+                right: { x1: 40, y1: 20, x2: 44, y2: 32 },
+                left: { x1: 48, y1: 20, x2: 52, y2: 32 },
+            },
+            leftArm: {
+                front: { x1: 36, y1: 52, x2: 40, y2: 64 },
+                back: { x1: 44, y1: 52, x2: 48, y2: 64 },
+                top: { x1: 36, y1: 48, x2: 40, y2: 52 },
+                bottom: { x1: 40, y1: 48, x2: 44, y2: 52 },
+                right: { x1: 32, y1: 52, x2: 36, y2: 64 },
+                left: { x1: 40, y1: 52, x2: 44, y2: 64 },
+            },
+            rightLeg: {
+                front: { x1: 4, y1: 20, x2: 8, y2: 32 },
+                back: { x1: 12, y1: 20, x2: 16, y2: 32 },
+                top: { x1: 4, y1: 16, x2: 8, y2: 20 },
+                bottom: { x1: 8, y1: 16, x2: 12, y2: 20 },
+                right: { x1: 0, y1: 20, x2: 4, y2: 32 },
+                left: { x1: 8, y1: 20, x2: 12, y2: 32 },
+            },
+            leftLeg: {
+                front: { x1: 20, y1: 52, x2: 24, y2: 64 },
+                back: { x1: 28, y1: 52, x2: 32, y2: 64 },
+                top: { x1: 20, y1: 48, x2: 24, y2: 52 },
+                bottom: { x1: 24, y1: 48, x2: 28, y2: 52 },
+                right: { x1: 16, y1: 52, x2: 20, y2: 64 },
+                left: { x1: 24, y1: 52, x2: 28, y2: 64 },
+            },
+        };
+
+        // UV-данные для старого формата 64x32 (левые конечности = зеркальные правые)
+        const UV_DATA_64x32 = {
+            head: UV_DATA_64x64.head,
+            body: UV_DATA_64x64.body,
+            rightArm: UV_DATA_64x64.rightArm,
+            leftArm: {
+                // Зеркалим правую руку: меняем right и left местами
+                front: UV_DATA_64x64.rightArm.front,
+                back: UV_DATA_64x64.rightArm.back,
+                top: UV_DATA_64x64.rightArm.top,
+                bottom: UV_DATA_64x64.rightArm.bottom,
+                right: UV_DATA_64x64.rightArm.left,
+                left: UV_DATA_64x64.rightArm.right,
+            },
+            rightLeg: UV_DATA_64x64.rightLeg,
+            leftLeg: {
+                front: UV_DATA_64x64.rightLeg.front,
+                back: UV_DATA_64x64.rightLeg.back,
+                top: UV_DATA_64x64.rightLeg.top,
+                bottom: UV_DATA_64x64.rightLeg.bottom,
+                right: UV_DATA_64x64.rightLeg.left,
+                left: UV_DATA_64x64.rightLeg.right,
+            },
+        };
+
+        /**
+         * Применяет UV-маппинг скина к BoxGeometry для части тела.
+         * Порядок граней BoxGeometry (Three.js 0.160): +X, -X, +Y, -Y, +Z, -Z
+         * Соответствие сторонам персонажа (смотрит на нас = +Z):
+         *   front  -> +Z (индекс 16)
+         *   back   -> -Z (индекс 20)
+         *   top    -> +Y (индекс 8)
+         *   bottom -> -Y (индекс 12)
+         *   right  -> -X (индекс 4) — правая сторона персонажа = левая для зрителя
+         *   left   -> +X (индекс 0) — левая сторона персонажа = правая для зрителя
+         */
+        function applySkinUVs(geometry, uvData, texW, texH) {
+            const faceMap = {
+                front: 16, // +Z
+                back: 20, // -Z
+                top: 8, // +Y
+                bottom: 12, // -Y
+                right: 4, // -X (правая сторона персонажа)
+                left: 0, // +X (левая сторона персонажа)
+            };
+
+            for (const [faceName, faceIndex] of Object.entries(faceMap)) {
+                const coords = uvData[faceName];
+                if (!coords) continue;
+                const uv = pixelToUV(coords.x1, coords.y1, coords.x2, coords.y2, texW, texH);
+                setFaceUVs(geometry, faceIndex, uv.u1, uv.v1, uv.u2, uv.v2);
+            }
+            geometry.attributes.uv.needsUpdate = true;
+        }
+
+        // ============ Создание модели персонажа ============
+        function createPlayerModel(skinTexture) {
+            const group = new THREE.Group();
+            const texW = skinTexture.image ? skinTexture.image.width : 64;
+            const texH = skinTexture.image ? skinTexture.image.height : 64;
+
+            // Определяем формат скина и выбираем UV-данные
+            const isOldFormat = texH <= 32;
+            const uvData = isOldFormat ? UV_DATA_64x32 : UV_DATA_64x64;
+
+            // Настраиваем текстуру
+            skinTexture.wrapS = THREE.ClampToEdgeWrapping;
+            skinTexture.wrapT = THREE.ClampToEdgeWrapping;
+            skinTexture.magFilter = THREE.NearestFilter;
+            skinTexture.minFilter = THREE.NearestFilter;
+            skinTexture.colorSpace = THREE.SRGBColorSpace;
+            skinTexture.needsUpdate = true;
+
+            const material = new THREE.MeshStandardMaterial({
+                map: skinTexture,
+                roughness: 0.5,
+                metalness: 0,
+            });
+
+            // --- Голова (8x8x8) ---
+            const headGeo = new THREE.BoxGeometry(8, 8, 8);
+            applySkinUVs(headGeo, uvData.head, texW, texH);
+            const headMesh = new THREE.Mesh(headGeo, material.clone());
+            headMesh.position.y = 26;
+            headMesh.castShadow = true;
+            headMesh.receiveShadow = true;
+            headMesh.name = 'head';
+            group.add(headMesh);
+
+            // --- Тело (8x12x4) ---
+            const bodyGeo = new THREE.BoxGeometry(8, 12, 4);
+            applySkinUVs(bodyGeo, uvData.body, texW, texH);
+            const bodyMesh = new THREE.Mesh(bodyGeo, material.clone());
+            bodyMesh.position.y = 16;
+            bodyMesh.castShadow = true;
+            bodyMesh.receiveShadow = true;
+            bodyMesh.name = 'body';
+            group.add(bodyMesh);
+
+            // --- Правая рука (4x12x4) ---
+            const rightArmGeo = new THREE.BoxGeometry(4, 12, 4);
+            applySkinUVs(rightArmGeo, uvData.rightArm, texW, texH);
+            const rightArmMesh = new THREE.Mesh(rightArmGeo, material.clone());
+            rightArmMesh.position.set(-6, 16, 0);
+            rightArmMesh.castShadow = true;
+            rightArmMesh.receiveShadow = true;
+            rightArmMesh.name = 'rightArm';
+            group.add(rightArmMesh);
+
+            // --- Левая рука (4x12x4) ---
+            const leftArmGeo = new THREE.BoxGeometry(4, 12, 4);
+            applySkinUVs(leftArmGeo, uvData.leftArm, texW, texH);
+            const leftArmMesh = new THREE.Mesh(leftArmGeo, material.clone());
+            leftArmMesh.position.set(6, 16, 0);
+            leftArmMesh.castShadow = true;
+            leftArmMesh.receiveShadow = true;
+            leftArmMesh.name = 'leftArm';
+            group.add(leftArmMesh);
+
+            // --- Правая нога (4x12x4) ---
+            const rightLegGeo = new THREE.BoxGeometry(4, 12, 4);
+            applySkinUVs(rightLegGeo, uvData.rightLeg, texW, texH);
+            const rightLegMesh = new THREE.Mesh(rightLegGeo, material.clone());
+            rightLegMesh.position.set(-2, 4, 0);
+            rightLegMesh.castShadow = true;
+            rightLegMesh.receiveShadow = true;
+            rightLegMesh.name = 'rightLeg';
+            group.add(rightLegMesh);
+
+            // --- Левая нога (4x12x4) ---
+            const leftLegGeo = new THREE.BoxGeometry(4, 12, 4);
+            applySkinUVs(leftLegGeo, uvData.leftLeg, texW, texH);
+            const leftLegMesh = new THREE.Mesh(leftLegGeo, material.clone());
+            leftLegMesh.position.set(2, 4, 0);
+            leftLegMesh.castShadow = true;
+            leftLegMesh.receiveShadow = true;
+            leftLegMesh.name = 'leftLeg';
+            group.add(leftLegMesh);
+
+            // Центрируем группу
+            group.position.set(0, 0, 0);
+            group.name = 'playerModel';
+
+            return group;
+        }
+
+        // ============ Загрузка скина и отображение модели ============
+        function loadAndDisplaySkin(skinUrl, nickname) {
+            removePlayerModel();
+
+            if (!isViewerInitialized) {
+                initThreeJS();
+            }
+
+            const loader = new THREE.TextureLoader();
+            loader.setCrossOrigin('anonymous');
+
+            loader.load(
+                skinUrl,
+                (texture) => {
+                    // Успешная загрузка текстуры
+                    playerModel = createPlayerModel(texture);
+                    scene.add(playerModel);
+
+                    // Показываем контейнер и кнопку скачивания
+                    skinViewerContainer.style.display = 'block';
+                    downloadBtn.style.display = 'inline-block';
+                    currentSkinUrl = skinUrl;
+                    currentNickname = nickname;
+
+                    showMessage('success', `✅ Скин игрока "${nickname}" загружен!`);
+                },
+                undefined, // progress callback
+                (error) => {
+                    console.error('Ошибка загрузки текстуры скина:', error);
+                    showMessage('error', '❌ Не удалось загрузить текстуру скина. Попробуйте позже.');
+                    skinViewerContainer.style.display = 'none';
+                    downloadBtn.style.display = 'none';
+                }
+            );
+        }
+
+        // ============ Анимационный цикл ============
+        function animate() {
+            animationId = requestAnimationFrame(animate);
+            if (controls) {
+                controls.update();
+            }
+            if (renderer && scene && camera) {
+                renderer.render(scene, camera);
+            }
+        }
+
+        // Запускаем анимацию сразу
+        animate();
+
+        // ============ Обработка ресайза ============
+        function onResize() {
+            if (!renderer || !skinViewerContainer) return;
+            const container = skinViewerContainer;
+            if (container.style.display === 'none') return;
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            if (width <= 0 || height <= 0) return;
+            renderer.setSize(width, height);
+            if (camera) {
+                camera.aspect = width / Math.max(height, 1);
+                camera.updateProjectionMatrix();
+            }
+        }
+        window.addEventListener('resize', onResize);
+
+        // ============ Вспомогательные функции ============
+        function showMessage(type, text) {
+            messageText.className = 'message ' + type;
+            messageText.textContent = text;
+            messageText.style.display = 'inline-block';
+        }
+
+        function hideMessage() {
+            messageText.className = 'message';
+            messageText.textContent = '';
+            messageText.style.display = 'none';
+        }
+
+        function setLoading(isLoading) {
+            if (isLoading) {
+                searchBtn.disabled = true;
+                searchBtn.textContent = '⏳ Ищем...';
+                nicknameInput.disabled = true;
+            } else {
+                searchBtn.disabled = false;
+                searchBtn.textContent = '🔍 Найти скин';
+                nicknameInput.disabled = false;
+            }
+        }
+
+        /**
+         * Декодирует Base64 значение текстуры из профиля Mojang.
+         */
+        function decodeSkinUrl(profile) {
+            if (!profile.properties || profile.properties.length === 0) {
+                return null;
+            }
+            const textureProp = profile.properties.find((p) => p.name === 'textures');
+            if (!textureProp || !textureProp.value) {
+                return null;
+            }
+            try {
+                const decoded = JSON.parse(atob(textureProp.value));
+                if (decoded.textures && decoded.textures.SKIN && decoded.textures.SKIN.url) {
+                    let url = decoded.textures.SKIN.url;
+                    // Обеспечиваем https
+                    if (url.startsWith('http:')) {
+                        url = url.replace('http:', 'https:');
+                    }
+                    return url;
+                }
+                return null;
+            } catch (e) {
+                console.error('Ошибка декодирования Base64 текстуры:', e);
+                return null;
+            }
+        }
+
+        // ============ Основная логика поиска ============
+        searchForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nickname = nicknameInput.value.trim();
+            if (!nickname) {
+                showMessage('error', '❌ Введите никнейм!');
                 return;
             }
 
-            errorMsg.style.display = 'none';
-            previewBox.style.display = 'none';
+            // Валидация никнейма (только латиница, цифры, подчёркивания, до 16 символов)
+            if (!/^[a-zA-Z0-9_]{1,16}$/.test(nickname)) {
+                showMessage(
+                    'error',
+                    '❌ Некорректный никнейм!\nИспользуйте только латинские буквы, цифры и _ (до 16 символов).'
+                );
+                return;
+            }
+
+            // Сбрасываем предыдущие результаты
+            hideMessage();
+            removePlayerModel();
+            skinViewerContainer.style.display = 'none';
             downloadBtn.style.display = 'none';
-            loadingMsg.style.display = 'block';
-            searchBtn.disabled = true;
+            currentSkinUrl = null;
+            currentNickname = null;
+
+            setLoading(true);
+            showMessage('loading', '⏳ Ищем игрока...');
 
             try {
-                const response = await fetch(`https://playerdb.co/api/player/minecraft/${username}`);
-                
-                if (!response.ok) {
-                    showError('ИГРОК НЕ НАЙДЕН!');
+                // Шаг 1: Получаем UUID по никнейму
+                const uuidResponse = await fetch(
+                    `https://api.mojang.com/users/profiles/minecraft/${encodeURIComponent(nickname)}`
+                );
+
+                if (!uuidResponse.ok) {
+                    if (uuidResponse.status === 404 || uuidResponse.status === 204) {
+                        throw new Error('PLAYER_NOT_FOUND');
+                    }
+                    throw new Error('API_ERROR');
+                }
+
+                const uuidData = await uuidResponse.json();
+                if (!uuidData || !uuidData.id) {
+                    throw new Error('PLAYER_NOT_FOUND');
+                }
+
+                const uuid = uuidData.id;
+                const actualNickname = uuidData.name;
+
+                // Обновляем сообщение
+                showMessage('loading', '⏳ Загружаем скин...');
+
+                // Шаг 2: Получаем профиль с текстурой
+                const profileResponse = await fetch(
+                    `https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`
+                );
+
+                if (!profileResponse.ok) {
+                    throw new Error('PROFILE_ERROR');
+                }
+
+                const profile = await profileResponse.json();
+                const skinUrl = decodeSkinUrl(profile);
+
+                if (!skinUrl) {
+                    showMessage(
+                        'error',
+                        `😕 У игрока "${actualNickname}" нет кастомного скина.\nИспользуется стандартный скин Steve.`
+                    );
+                    // Показываем стандартный скин Steve
+                    const steveSkinUrl =
+                        'https://textures.minecraft.net/texture/1a4af718455d4aab528e7a61f86fa25e6a369d1768dcb13f7df319a713eb810b';
+                    loadAndDisplaySkin(steveSkinUrl, actualNickname);
+                    setLoading(false);
                     return;
                 }
 
-                const result = await response.json();
-                
-                if (!result.success || !result.data?.player) {
-                    showError('ИГРОК НЕ НАЙДЕН!');
-                    return;
-                }
-
-                const correctedUsername = result.data.player.username;
-                const skinUrl = `https://mc-heads.net/skin/${correctedUsername}`;
-
-                // Пытаемся запустить 3D-плеер
-                const isViewerReady = initSkinViewer(skinUrl);
-                
-                if (isViewerReady) {
-                    activeSkinUrl = skinUrl;
-                    loadingMsg.style.display = 'none';
-                    previewBox.style.display = 'flex';
-                    downloadBtn.style.display = 'block';
-                }
-
+                // Шаг 3: Загружаем и отображаем скин
+                loadAndDisplaySkin(skinUrl, actualNickname);
+                setLoading(false);
             } catch (error) {
-                console.error(error);
-                showError('ОШИБКА СЕТИ!\nСЕРВЕРЫ API СЕЙЧАС НЕДОСТУПНЫ.');
-            } finally {
-                searchBtn.disabled = false;
-            }
-        }
+                setLoading(false);
+                skinViewerContainer.style.display = 'none';
+                downloadBtn.style.display = 'none';
 
-        function showError(text) {
-            loadingMsg.style.display = 'none';
-            errorMsg.innerHTML = `ОШИБКА:<br>${text}`;
-            errorMsg.style.display = 'block';
-            searchBtn.disabled = false;
-        }
-
-        async function downloadSkinFile() {
-            if (!activeSkinUrl) return;
-            
-            try {
-                const username = usernameInput.value.trim() || 'steve';
-                const response = await fetch(activeSkinUrl);
-                const blob = await response.blob();
-                const blobUrl = URL.createObjectURL(blob);
-                
-                const link = document.createElement('a');
-                link.href = blobUrl;
-                link.download = `${username}_skin.png`;
-                document.body.appendChild(link);
-                link.click();
-                
-                document.body.removeChild(link);
-                URL.revokeObjectURL(blobUrl);
-            } catch (err) {
-                window.open(activeSkinUrl, '_blank');
-            }
-        }
-
-        searchBtn.addEventListener('click', searchSkin);
-        downloadBtn.addEventListener('click', downloadSkinFile);
-        
-        usernameInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                searchSkin();
+                if (error.message === 'PLAYER_NOT_FOUND') {
+                    showMessage('error', `❌ Игрок с никнеймом "${nickname}" не найден!\nПроверьте правильность написания.`);
+                } else if (error.message === 'PROFILE_ERROR') {
+                    showMessage('error', '❌ Не удалось загрузить профиль игрока. Попробуйте позже.');
+                } else if (error.message === 'API_ERROR') {
+                    showMessage('error', '❌ Ошибка соединения с серверами Mojang. Проверьте интернет-соединение.');
+                } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    showMessage('error', '❌ Проблема с сетью. Проверьте подключение к интернету.');
+                } else {
+                    showMessage('error', `❌ Произошла неизвестная ошибка: ${error.message}`);
+                }
+                console.error('Ошибка при поиске скина:', error);
             }
         });
+
+        // ============ Кнопка скачивания ============
+        downloadBtn.addEventListener('click', () => {
+            if (!currentSkinUrl) {
+                showMessage('error', '❌ Сначала найдите скин!');
+                return;
+            }
+
+            const nickname = currentNickname || 'player';
+            const filename = `${nickname}_skin.png`;
+
+            // Создаём ссылку для скачивания
+            const link = document.createElement('a');
+            link.href = currentSkinUrl;
+            link.download = filename;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showMessage('success', `💾 Скин "${nickname}" скачивается!`);
+            setTimeout(() => {
+                if (messageText.textContent.includes('скачивается')) {
+                    hideMessage();
+                }
+            }, 3000);
+        });
+
+        // ============ Инициализация при загрузке страницы ============
+        // Предварительно инициализируем Three.js, но не показываем контейнер
+        setTimeout(() => {
+            if (skinViewerContainer.clientWidth > 0) {
+                initThreeJS();
+            }
+        }, 200);
+
+        // Обработчик для ленивой инициализации при первом поиске
+        const observer = new ResizeObserver(() => {
+            if (skinViewerContainer.clientWidth > 0 && !isViewerInitialized && playerModel === null &&
+                skinViewerContainer.style.display !== 'none') {
+                initThreeJS();
+            }
+        });
+        observer.observe(skinViewerContainer);
+
+        console.log('🟢 Minecraft Skin Downloader готов!');
+        console.log('   Введите никнейм и нажмите "Найти скин"');
     </script>
 </body>
 </html>
