@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/skinview3d@2.1.2/dist/skinview3d.bundle.js"></script>
 
     <style>
-        /* Базовые стили и кастомный фон в стиле Minecraft (грязь/земля) */
         * {
             box-sizing: border-box;
             image-rendering: pixelated;
@@ -26,14 +25,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Текстура земли через SVG Data-URL для автономности файла */
             background-color: #4c3a26;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%235c442c'/%3E%3Crect width='4' height='4' fill='%234c3a26' x='0' y='0'/%3E%3Crect width='4' height='4' fill='%234c3a26' x='8' y='4'/%3E%3Crect width='4' height='4' fill='%234c3a26' x='4' y='12'/%3E%3Crect width='4' height='4' fill='%233c2e1e' x='12' y='8'/%3E%3Crect width='4' height='4' fill='%236c5034' x='4' y='0'/%3E%3Crect width='4' height='4' fill='%236c5034' x='12' y='12'/%3E%3C/svg%3E");
             background-size: 64px 64px;
             box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.6);
         }
 
-        /* Главный контейнер GUI */
         .gui-container {
             background: rgba(16, 16, 16, 0.85);
             border: 4px solid #000000;
@@ -46,7 +43,6 @@
             position: relative;
         }
 
-        /* Заголовок в стиле Minecraft */
         h1 {
             font-size: 18px;
             margin-top: 0;
@@ -56,7 +52,6 @@
             line-height: 1.4;
         }
 
-        /* Поле ввода */
         .mc-input-wrapper {
             margin-bottom: 20px;
         }
@@ -78,7 +73,6 @@
             color: #ffffff;
         }
 
-        /* Стилизация кнопок под каменные плиты */
         .mc-button {
             width: 100%;
             background: #5c5c5c;
@@ -124,7 +118,6 @@
             cursor: not-allowed;
         }
 
-        /* Блок 3D отображения персонажа */
         .preview-container {
             margin: 20px auto;
             background: #141414;
@@ -148,7 +141,6 @@
             cursor: grabbing;
         }
 
-        /* Сообщения об ошибках и загрузке */
         .status-msg {
             margin: 15px 0;
             font-size: 11px;
@@ -167,13 +159,11 @@
             animation: pulse 1s infinite alternate;
         }
 
-        /* Анимация мигания текста загрузки */
         @keyframes pulse {
             from { opacity: 0.6; }
             to { opacity: 1; }
         }
 
-        /* Кнопка скачивания (зеленая плитка) */
         .btn-download {
             background: #55aa55;
             border-top-color: #77cc77;
@@ -192,24 +182,12 @@
             border-right-color: #448844;
         }
 
-        /* Адаптивность для мобильных устройств */
         @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-            .gui-container {
-                padding: 20px 15px;
-            }
-            h1 {
-                font-size: 15px;
-            }
-            .mc-button, .mc-input {
-                font-size: 12px;
-                padding: 10px;
-            }
-            .preview-container {
-                height: 260px;
-            }
+            body { padding: 10px; }
+            .gui-container { padding: 20px 15px; }
+            h1 { font-size: 15px; }
+            .mc-button, .mc-input { font-size: 12px; padding: 10px; }
+            .preview-container { height: 260px; }
         }
     </style>
 </head>
@@ -235,7 +213,6 @@
     </div>
 
     <script>
-        // DOM Элементы
         const usernameInput = document.getElementById('username-input');
         const searchBtn = document.getElementById('search-btn');
         const loadingMsg = document.getElementById('loading-msg');
@@ -246,7 +223,13 @@
         let skinViewer = null;
         let activeSkinUrl = '';
 
-        // Инициализация 3D просмотра
+        // Список надежных публичных CORS-прокси на случай сбоев
+        const proxyGateways = [
+            (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+            (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+            (url) => `https://api.codetabs.com/v1/proxy?url=${encodeURIComponent(url)}`
+        ];
+
         function initSkinViewer(skinUrl) {
             if (!skinViewer) {
                 skinViewer = new skinview3d.SkinViewer({
@@ -254,21 +237,15 @@
                     width: previewBox.clientWidth,
                     height: previewBox.clientHeight
                 });
-                
-                // Конфигурация вращения и управления
                 skinViewer.autoRotate = true;
-                skinViewer.autoRotateSpeed = 0.5;
+                skinViewer.autoRotateSpeed = 0.6;
                 
-                // Включение возможности крутить мышкой
                 const controls = skinview3d.createOrbitControls(skinViewer);
-                controls.enableZoom = false; // Отключаем зум колесиком для стабильности GUI
+                controls.enableZoom = false; 
             }
-            
-            // Загружаем текстуру скина в модель
             skinViewer.loadSkin(skinUrl);
         }
 
-        // Слушатель изменения размера окна для адаптивности canvas
         window.addEventListener('resize', () => {
             if (skinViewer && previewBox.style.display === 'flex') {
                 skinViewer.width = previewBox.clientWidth;
@@ -276,18 +253,26 @@
             }
         });
 
-        // Функция отправки запросов (с использованием прокси для обхода CORS ограничений Mojang)
-        async function fetchWithProxy(url) {
-            // Использование надежного CORS-прокси allorigins.win
-            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
-            const response = await fetch(proxyUrl);
-            if (!response.ok) {
-                throw new Error('Network error');
+        // Умная функция запроса, перебирающая прокси при ошибках
+        async function fetchWithProxyFallback(targetUrl) {
+            let lastError = null;
+            
+            for (let i = 0; i < proxyGateways.length; i++) {
+                try {
+                    const proxiedUrl = proxyGateways[i](targetUrl);
+                    const response = await fetch(proxiedUrl);
+                    
+                    if (response.ok) {
+                        return response; // Успешно получили данные, выходим из цикла
+                    }
+                } catch (err) {
+                    console.warn(`Прокси #${i+1} не ответил, пробуем следующий...`);
+                    lastError = err;
+                }
             }
-            return response;
+            throw lastError || new Error('Все CORS прокси недоступны');
         }
 
-        // Основная логика поиска скина
         async function searchSkin() {
             const username = usernameInput.value.trim();
             
@@ -296,7 +281,6 @@
                 return;
             }
 
-            // Сброс интерфейса перед поиском
             errorMsg.style.display = 'none';
             previewBox.style.display = 'none';
             downloadBtn.style.display = 'none';
@@ -304,12 +288,11 @@
             searchBtn.disabled = true;
 
             try {
-                // Шаг 1: Получаем UUID по никнейму игрока
-                const uuidResponse = await fetchWithProxy(`https://api.mojang.com/users/profiles/minecraft/${username}`);
+                // Шаг 1: Получаем UUID игрока
+                const uuidResponse = await fetchWithProxyFallback(`https://api.mojang.com/users/profiles/minecraft/${username}`);
                 
-                // Если статус 204 или пустой контент — игрок не найден
                 if (uuidResponse.status === 204) {
-                    showError('ИГРОК НЕ НАЙДЕН!');
+                    showError('ИГРОК С ТАКИМ\nНИКОМ НЕ НАЙДЕН!');
                     return;
                 }
                 
@@ -317,66 +300,59 @@
                 const uuid = uuidData.id;
 
                 if (!uuid) {
-                    showError('ОШИБКА ИДЕНТИФИКАЦИИ!');
+                    showError('НЕУДАЛОСЬ ПОЛУЧИТЬ UUID!');
                     return;
                 }
 
-                // Шаг 2: Получаем профиль игрока со свойствами текстуры по его UUID
-                const profileResponse = await fetchWithProxy(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`);
+                // Шаг 2: Получаем профиль текстур по UUID
+                const profileResponse = await fetchWithProxyFallback(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`);
                 const profileData = await profileResponse.json();
 
-                // Поиск свойства "textures" в массиве properties
                 const texturesProperty = profileData.properties?.find(prop => prop.name === 'textures');
                 
                 if (!texturesProperty) {
-                    showError('У ИГРОКА НЕТ СКИНА!');
+                    showError('У ИГРОКА НЕТ\nУСТАНОВЛЕННОГО СКИНА!');
                     return;
                 }
 
-                // Шаг 3: Декодируем Base64 строку с JSON текстур
-                const decodedJsonString = atob(texturesProperty.value);
-                const texturesData = JSON.parse(decodedJsonString);
-                
-                // Извлекаем URL оригинального PNG файла скина
-                const skinUrl = texturesData.textures?.SKIN?.url;
+                // Шаг 3: Декодируем base64 и забираем URL скина
+                const decodedJson = JSON.parse(atob(texturesProperty.value));
+                const skinUrl = decodedJson.textures?.SKIN?.url;
 
                 if (!skinUrl) {
-                    showError('ТЕКСТУРА СКИНА НЕ НАЙДЕНА!');
+                    showError('ССЫЛКА НА ТЕКСТУРУ\nНЕ НАЙДЕНА!');
                     return;
                 }
 
-                // Успешный результат: отображаем элементы и рендерим модель
+                // Отрисовка интерфейса
                 activeSkinUrl = skinUrl;
                 loadingMsg.style.display = 'none';
                 previewBox.style.display = 'flex';
                 downloadBtn.style.display = 'block';
                 
-                // Запуск 3D рендера
                 initSkinViewer(skinUrl);
 
             } catch (error) {
                 console.error(error);
-                showError('ОШИБКА СЕТИ ИЛИ СЕРВЕРА!');
+                showError('СБОЙ СЕТИ ИЛИ ПРОКСИ!\nПОПРОБУЙТЕ ОТКЛЮЧИТЬ VPN/БЛОКИРОВЩИК');
             } finally {
                 searchBtn.disabled = false;
             }
         }
 
-        // Показ сообщений об ошибках
         function showError(text) {
             loadingMsg.style.display = 'none';
-            errorMsg.innerText = `ОШИБКА:\n${text}`;
+            errorMsg.innerHTML = `ОШИБКА:<br>${text}`;
             errorMsg.style.display = 'block';
             searchBtn.disabled = false;
         }
 
-        // Функция скачивания файла скина (в обход CORS на скачивание картинки напрямую)
         async function downloadSkinFile() {
             if (!activeSkinUrl) return;
             
             try {
-                const username = usernameInput.value.trim() || 'minecraft';
-                const response = await fetchWithProxy(activeSkinUrl);
+                const username = usernameInput.value.trim() || 'steve';
+                const response = await fetchWithProxyFallback(activeSkinUrl);
                 const blob = await response.blob();
                 const blobUrl = URL.createObjectURL(blob);
                 
@@ -386,20 +362,17 @@
                 document.body.appendChild(link);
                 link.click();
                 
-                // Очистка памяти
                 document.body.removeChild(link);
                 URL.revokeObjectURL(blobUrl);
             } catch (err) {
-                // Резервный вариант, если Blob-скачивание заблокировано
+                // Если даже через прокси блоб не отдался — открываем в новой вкладке
                 window.open(activeSkinUrl, '_blank');
             }
         }
 
-        // Обработчики событий
         searchBtn.addEventListener('click', searchSkin);
         downloadBtn.addEventListener('click', downloadSkinFile);
         
-        // Поиск по нажатию клавиши Enter в поле ввода
         usernameInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 searchSkin();
