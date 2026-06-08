@@ -1,0 +1,181 @@
+/* Общие сбросы стилей и пиксельный шрифт */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    image-rendering: pixelated;
+}
+
+body {
+    /* Тёмный градиент в стиле загрузочного экрана или глубин Minecraft */
+    background: radial-gradient(circle, #2c1b12 0%, #140c08 100%);
+    background-color: #140c08;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Главный контейнер в стиле меню Minecraft */
+.mc-container {
+    background-color: #2e2e2e;
+    border: 4px solid #000000;
+    box-shadow: inset -4px -4px 0px #151515, inset 4px 4px 0px #555555;
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Стилизация заголовка с классической тенью */
+.mc-title {
+    font-size: 18px;
+    color: #ffff55; /* Жёлтый цвет интерфейса */
+    text-shadow: 3px 3px 0px #3f3f00;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+/* Блок поиска */
+.search-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Поле ввода */
+.mc-input {
+    background-color: #000000;
+    border: 3px solid #a0a0a0;
+    color: #ffffff;
+    padding: 12px;
+    font-size: 12px;
+    outline: none;
+    width: 100%;
+    text-align: center;
+}
+
+.mc-input:focus {
+    border-color: #ffffff;
+}
+
+/* Аутентичные кнопки Minecraft */
+.mc-button {
+    position: relative;
+    padding: 14px;
+    font-size: 12px;
+    color: #e0e0e0;
+    background-color: #7c7c7c;
+    border: 3px solid #000000;
+    box-shadow: inset -3px -3px 0px #4a4a4a, inset 3px 3px 0px #b0b0b0;
+    cursor: pointer;
+    text-shadow: 2px 2px 0px #222222;
+    transition: all 0.1s ease;
+}
+
+/* Кнопка "Найти" (Зелёная) */
+.mc-button.success {
+    background-color: #5c8e32;
+    box-shadow: inset -3px -3px 0px #3a5f21, inset 3px 3px 0px #7ca853;
+    color: #ffffff;
+    text-shadow: 2px 2px 0px #1d3010;
+}
+
+.mc-button:hover:not(:disabled) {
+    color: #ffffff;
+    background-color: #8c8c8c;
+    box-shadow: inset -3px -3px 0px #5a5a5a, inset 3px 3px 0px #c0c0c0;
+    outline: 2px dashed #ffffff;
+    outline-offset: -6px;
+}
+
+.mc-button.success:hover:not(:disabled) {
+    background-color: #6da33b;
+    box-shadow: inset -3px -3px 0px #446f27, inset 3px 3px 0px #8bc25c;
+}
+
+.mc-button:active:not(:disabled) {
+    box-shadow: inset 3px 3px 0px #4a4a4a, inset -3px -3px 0px #b0b0b0;
+    padding-top: 15px;
+    padding-bottom: 13px;
+}
+
+.mc-button.success:active:not(:disabled) {
+    box-shadow: inset 3px 3px 0px #3a5f21, inset -3px -3px 0px #7ca853;
+}
+
+/* Состояние заблокированной кнопки */
+.mc-button:disabled {
+    background-color: #4a4a4a;
+    color: #808080;
+    box-shadow: none;
+    border-color: #222222;
+    cursor: not-allowed;
+    text-shadow: none;
+}
+
+/* Окна вывода статусов и ошибок (в стиле экрана смерти/ошибки подключения) */
+.mc-status {
+    padding: 12px;
+    font-size: 10px;
+    border: 3px solid #000000;
+    line-height: 1.6;
+}
+
+.mc-status.error {
+    background-color: #5c1111;
+    border-color: #ff5555;
+    color: #ff5555;
+    text-shadow: 2px 2px 0px #2a0000;
+}
+
+.mc-status.loading {
+    background-color: #1a1a1a;
+    border-color: #ffff55;
+    color: #ffff55;
+    text-shadow: 2px 2px 0px #3f3f00;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Стилизация контейнера 3D-модели */
+.viewer-wrapper {
+    background-color: #1a1a1a;
+    border: 4px solid #000000;
+    box-shadow: inset 3px 3px 10px rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    height: 360px;
+}
+
+canvas id="skin-viewer" {
+    width: 100%;
+    height: 100%;
+    outline: none;
+}
+
+/* Адаптивность для мобильных девайсов */
+@media (max-width: 480px) {
+    .mc-container {
+        width: 95%;
+        padding: 20px 15px;
+    }
+    
+    .mc-title {
+        font-size: 14px;
+    }
+    
+    .viewer-wrapper {
+        height: 280px;
+    }
+}

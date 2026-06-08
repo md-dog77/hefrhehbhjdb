@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Skin Downloader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="mc-container">
+        <h1 class="mc-title">ПОИСК СКИНОВ</h1>
+        
+        <div class="search-box">
+            <input type="text" id="username-input" class="mc-input" placeholder="Никнейм игрока..." autocomplete="off">
+            <button id="search-btn" class="mc-button success">НАЙТИ</button>
+        </div>
+
+        <div id="status-message" class="mc-status hidden"></div>
+
+        <div class="viewer-wrapper">
+            <canvas id="skin-viewer"></canvas>
+        </div>
+
+        <div class="actions-box">
+            <button id="download-btn" class="mc-button default disabled" disabled>СКАЧАТЬ СКИН</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/skinview3d@2.1.2/dist/bundle.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
